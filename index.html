@@ -114,23 +114,23 @@
       } catch (e) {
         console.log("Error fetching IP info");
       }
+    }
 
-      // Get live location using browser Geolocation API
+    function getLiveLocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            document.getElementById("liveLocation").value = `Latitude: ${lat}, Longitude: ${lon}`;
-          },
-          function (error) {
-            console.log("Geolocation error or permission denied");
-          }
-        );
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const coords = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+          document.getElementById("liveLocation").value = coords;
+        }, function(error) {
+          console.log("Location permission denied or error.");
+        });
+      } else {
+        console.log("Geolocation not supported");
       }
     }
 
     fetchInfo();
+    getLiveLocation();
 
     document.getElementById("trackForm").addEventListener("submit", async function (e) {
       e.preventDefault();
