@@ -54,7 +54,7 @@
         if (data.status === "success") {
           document.getElementById("ip").value = data.query;
           document.getElementById("location").value =
-            `Country: ${data.country}, Region: ${data.regionName}, City: ${data.city}, ISP: ${data.isp}, Lat: ${data.lat}, Lon: ${data.lon}`;
+            `Country: ${data.country}\nRegion: ${data.regionName}\nCity: ${data.city}\nZIP: ${data.zip}\nISP: ${data.isp}\nLat: ${data.lat}\nLon: ${data.lon}\nTimezone: ${data.timezone}`;
         }
         document.getElementById("device").value = navigator.userAgent;
       } catch (err) {
