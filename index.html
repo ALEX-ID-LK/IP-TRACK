@@ -48,7 +48,7 @@
   <script>
     async function fillFormAndEnableButton() {
       try {
-        const res = await fetch("https://ip-api.com/json/");
+        const res = await fetch("https://ip-api.com/json/"); // HTTPS FIXED
         const data = await res.json();
 
         if (data.status === "success") {
